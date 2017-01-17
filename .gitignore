@@ -16,3 +16,6 @@ Thumbs.db
 
 # Folder config file
 Desktop.ini
+
+# Video files
+Assets/StreamingAssets/AVProVideoSamples/
