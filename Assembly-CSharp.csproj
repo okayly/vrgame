@@ -91,6 +91,7 @@
      <Compile Include="Assets\Google2uGen\ObjDB\Resources\Answer\Answer.cs" />
      <Compile Include="Assets\Google2uGen\ObjDB\Resources\Movie\Movie.cs" />
      <Compile Include="Assets\Scripts\MovieController.cs" />
+     <Compile Include="Assets\Scripts\TableData.cs" />
      <None Include="Assets\AVProVideo\Resources\Shaders\AVProVideo-Lit-Diffuse.shader" />
      <None Include="Assets\AVProVideo\Resources\Shaders\AVProVideo-UI-Default-Stereo.shader" />
      <None Include="Assets\AVProVideo\Demos\Materials\UI-Default-ExtraTexture.shader" />

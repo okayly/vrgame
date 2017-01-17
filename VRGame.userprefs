@@ -1,6 +1,13 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\TableData.cs">
+    <Files>
+      <File FileName="Assets\G2USample\_2 Open This Scene\SampleAssets\Scripts\AI\AIManager.cs" Line="20" Column="10" />
+      <File FileName="Assets\Scripts\MovieController.cs" Line="16" Column="1" />
+      <File FileName="Assets\Scripts\TableData.cs" Line="20" Column="18" />
+      <File FileName="Assets\Google2uGen\ObjDB\Resources\Movie\Movie.cs" Line="172" Column="32" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

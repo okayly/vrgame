@@ -59,13 +59,6 @@ namespace Google2u
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			GUILayout.Label( "_SceneID", GUILayout.Width( 150.0f ) );
-			{
-				EditorGUILayout.IntField( r._SceneID );
-			}
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label( "_SceneType", GUILayout.Width( 150.0f ) );
 			{
 				EditorGUILayout.TextField( r._SceneType );
@@ -105,7 +98,7 @@ namespace Google2u
 			    	if ( _NextIDList_Index >= r._NextIDList.Count )
 		        		_NextIDList_Index = 0;
 				}
-				EditorGUILayout.IntField( r._NextIDList[_NextIDList_Index] );
+				EditorGUILayout.TextField( r._NextIDList[_NextIDList_Index] );
 			}
 			EditorGUILayout.EndHorizontal();
 

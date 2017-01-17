@@ -16,15 +16,14 @@ namespace Google2u
 	{
 		public string _Dialog;
 		public int _MovieID;
-		public int _SceneID;
 		public string _SceneType;
 		public int _AnswerID;
-		public System.Collections.Generic.List<int> _NextIDList = new System.Collections.Generic.List<int>();
+		public System.Collections.Generic.List<string> _NextIDList = new System.Collections.Generic.List<string>();
 		public string _FileName;
 		public string _MovieTime;
 		public string _YoutubeLink;
 		public string _Comment;
-		public MovieRow(string __G2U_ID, string __Dialog, string __MovieID, string __SceneID, string __SceneType, string __AnswerID, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
+		public MovieRow(string __ID, string __Dialog, string __MovieID, string __SceneType, string __AnswerID, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
 		{
 			_Dialog = __Dialog.Trim();
 			{
@@ -33,13 +32,6 @@ namespace Google2u
 					_MovieID = res;
 				else
 					Debug.LogError("Failed To Convert _MovieID string: "+ __MovieID +" to int");
-			}
-			{
-			int res;
-				if(int.TryParse(__SceneID, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
-					_SceneID = res;
-				else
-					Debug.LogError("Failed To Convert _SceneID string: "+ __SceneID +" to int");
 			}
 			_SceneType = __SceneType.Trim();
 			{
@@ -50,17 +42,10 @@ namespace Google2u
 					Debug.LogError("Failed To Convert _AnswerID string: "+ __AnswerID +" to int");
 			}
 			{
-				int res;
-				string []result = __NextIDList.Split(",".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
+				string []result = __NextIDList.Split("|".ToCharArray(),System.StringSplitOptions.RemoveEmptyEntries);
 				for(int i = 0; i < result.Length; i++)
 				{
-					if(int.TryParse(result[i], NumberStyles.Any, CultureInfo.InvariantCulture, out res))
-						_NextIDList.Add( res );
-					else
-					{
-						_NextIDList.Add( 0 );
-						Debug.LogError("Failed To Convert _NextIDList string: "+ result[i] +" to int");
-					}
+					_NextIDList.Add( result[i].Trim() );
 				}
 			}
 			_FileName = __FileName.Trim();
@@ -69,7 +54,7 @@ namespace Google2u
 			_Comment = __Comment.Trim();
 		}
 
-		public int Length { get { return 10; } }
+		public int Length { get { return 9; } }
 
 		public string this[int i]
 		{
@@ -91,27 +76,24 @@ namespace Google2u
 					ret = _MovieID.ToString();
 					break;
 				case 2:
-					ret = _SceneID.ToString();
-					break;
-				case 3:
 					ret = _SceneType.ToString();
 					break;
-				case 4:
+				case 3:
 					ret = _AnswerID.ToString();
 					break;
-				case 5:
+				case 4:
 					ret = _NextIDList.ToString();
 					break;
-				case 6:
+				case 5:
 					ret = _FileName.ToString();
 					break;
-				case 7:
+				case 6:
 					ret = _MovieTime.ToString();
 					break;
-				case 8:
+				case 7:
 					ret = _YoutubeLink.ToString();
 					break;
-				case 9:
+				case 8:
 					ret = _Comment.ToString();
 					break;
 			}
@@ -129,9 +111,6 @@ namespace Google2u
 					break;
 				case "_MovieID":
 					ret = _MovieID.ToString();
-					break;
-				case "_SceneID":
-					ret = _SceneID.ToString();
 					break;
 				case "_SceneType":
 					ret = _SceneType.ToString();
@@ -163,7 +142,6 @@ namespace Google2u
 			string ret = System.String.Empty;
 			ret += "{" + "_Dialog" + " : " + _Dialog.ToString() + "} ";
 			ret += "{" + "_MovieID" + " : " + _MovieID.ToString() + "} ";
-			ret += "{" + "_SceneID" + " : " + _SceneID.ToString() + "} ";
 			ret += "{" + "_SceneType" + " : " + _SceneType.ToString() + "} ";
 			ret += "{" + "_AnswerID" + " : " + _AnswerID.ToString() + "} ";
 			ret += "{" + "_NextIDList" + " : " + _NextIDList.ToString() + "} ";
@@ -177,19 +155,19 @@ namespace Google2u
 	public class Movie :  Google2uComponentBase, IGoogle2uDB
 	{
 		public enum rowIds {
-			vr_001, vr_002, vr_003, vr_004, vr_005, vr_006, vr_007, vr_008, vr_009, vr_010, vr_011, vr_012, vr_013, vr_014, vr_015, vr_016, vr_017, vr_018
-			, vr_019, vr_020, vr_021, vr_022, vr_023, vr_024, vr_025, vr_026, vr_027, vr_028, vr_029, vr_030, vr_031, vr_032, vr_033, vr_034, vr_035, vr_036, vr_037, vr_038
-			, vr_039, vr_040, vr_041
+			vr_1, vr_2, vr_3, vr_4, vr_5, vr_6, vr_7, vr_8, vr_9, vr_10, vr_11, vr_12, vr_13, vr_14, vr_15, vr_16, vr_17, vr_18
+			, vr_19, vr_20, vr_21, vr_22, vr_23, vr_24, vr_25, vr_26, vr_27, vr_28, vr_29, vr_30, vr_31, vr_32, vr_33, vr_34, vr_35, vr_36, vr_37, vr_38
+			, vr_39, vr_40, vr_41
 		};
 		public string [] rowNames = {
-			"vr_001", "vr_002", "vr_003", "vr_004", "vr_005", "vr_006", "vr_007", "vr_008", "vr_009", "vr_010", "vr_011", "vr_012", "vr_013", "vr_014", "vr_015", "vr_016", "vr_017", "vr_018"
-			, "vr_019", "vr_020", "vr_021", "vr_022", "vr_023", "vr_024", "vr_025", "vr_026", "vr_027", "vr_028", "vr_029", "vr_030", "vr_031", "vr_032", "vr_033", "vr_034", "vr_035", "vr_036", "vr_037", "vr_038"
-			, "vr_039", "vr_040", "vr_041"
+			"vr_1", "vr_2", "vr_3", "vr_4", "vr_5", "vr_6", "vr_7", "vr_8", "vr_9", "vr_10", "vr_11", "vr_12", "vr_13", "vr_14", "vr_15", "vr_16", "vr_17", "vr_18"
+			, "vr_19", "vr_20", "vr_21", "vr_22", "vr_23", "vr_24", "vr_25", "vr_26", "vr_27", "vr_28", "vr_29", "vr_30", "vr_31", "vr_32", "vr_33", "vr_34", "vr_35", "vr_36", "vr_37", "vr_38"
+			, "vr_39", "vr_40", "vr_41"
 		};
 		public System.Collections.Generic.List<MovieRow> Rows = new System.Collections.Generic.List<MovieRow>();
 		public override void AddRowGeneric (System.Collections.Generic.List<string> input)
 		{
-			Rows.Add(new MovieRow(input[0],input[1],input[2],input[3],input[4],input[5],input[6],input[7],input[8],input[9],input[10]));
+			Rows.Add(new MovieRow(input[0],input[1],input[2],input[3],input[4],input[5],input[6],input[7],input[8],input[9]));
 		}
 		public override void Clear ()
 		{
