@@ -2,6 +2,7 @@
 
 # Unity library
 Library/
+Temp/
 
 # OSX
 .DS_Store
