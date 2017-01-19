@@ -14,23 +14,15 @@ namespace Google2u
 	[System.Serializable]
 	public class AnswerRow : IGoogle2uRow
 	{
-		public int _AnswerID;
 		public string _Answer;
 		public string _Comment;
-		public AnswerRow(string __G2U_ID, string __AnswerID, string __Answer, string __Comment) 
+		public AnswerRow(string __ID, string __Answer, string __Comment) 
 		{
-			{
-			int res;
-				if(int.TryParse(__AnswerID, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
-					_AnswerID = res;
-				else
-					Debug.LogError("Failed To Convert _AnswerID string: "+ __AnswerID +" to int");
-			}
 			_Answer = __Answer.Trim();
 			_Comment = __Comment.Trim();
 		}
 
-		public int Length { get { return 3; } }
+		public int Length { get { return 2; } }
 
 		public string this[int i]
 		{
@@ -46,12 +38,9 @@ namespace Google2u
 			switch( index )
 			{
 				case 0:
-					ret = _AnswerID.ToString();
-					break;
-				case 1:
 					ret = _Answer.ToString();
 					break;
-				case 2:
+				case 1:
 					ret = _Comment.ToString();
 					break;
 			}
@@ -64,9 +53,6 @@ namespace Google2u
 			var ret = System.String.Empty;
 			switch( colID )
 			{
-				case "_AnswerID":
-					ret = _AnswerID.ToString();
-					break;
 				case "_Answer":
 					ret = _Answer.ToString();
 					break;
@@ -80,7 +66,6 @@ namespace Google2u
 		public override string ToString()
 		{
 			string ret = System.String.Empty;
-			ret += "{" + "_AnswerID" + " : " + _AnswerID.ToString() + "} ";
 			ret += "{" + "_Answer" + " : " + _Answer.ToString() + "} ";
 			ret += "{" + "_Comment" + " : " + _Comment.ToString() + "} ";
 			return ret;
@@ -89,15 +74,15 @@ namespace Google2u
 	public class Answer :  Google2uComponentBase, IGoogle2uDB
 	{
 		public enum rowIds {
-			answer_000, answer_001, answer_002, answer_003, answer_004, answer_005, answer_006, answer_007, answer_008, answer_009, answer_010, answer_011, answer_012, answer_013, answer_014, answer_015
+			answer_1, answer_2, answer_3, answer_4, answer_5, answer_6, answer_7, answer_8, answer_9, answer_10, answer_11, answer_12, answer_13, answer_14, answer_15, answer_16
 		};
 		public string [] rowNames = {
-			"answer_000", "answer_001", "answer_002", "answer_003", "answer_004", "answer_005", "answer_006", "answer_007", "answer_008", "answer_009", "answer_010", "answer_011", "answer_012", "answer_013", "answer_014", "answer_015"
+			"answer_1", "answer_2", "answer_3", "answer_4", "answer_5", "answer_6", "answer_7", "answer_8", "answer_9", "answer_10", "answer_11", "answer_12", "answer_13", "answer_14", "answer_15", "answer_16"
 		};
 		public System.Collections.Generic.List<AnswerRow> Rows = new System.Collections.Generic.List<AnswerRow>();
 		public override void AddRowGeneric (System.Collections.Generic.List<string> input)
 		{
-			Rows.Add(new AnswerRow(input[0],input[1],input[2],input[3]));
+			Rows.Add(new AnswerRow(input[0],input[1],input[2]));
 		}
 		public override void Clear ()
 		{

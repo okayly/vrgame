@@ -44,13 +44,6 @@ namespace Google2u
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			GUILayout.Label( "_AnswerID", GUILayout.Width( 150.0f ) );
-			{
-				EditorGUILayout.IntField( r._AnswerID );
-			}
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label( "_Answer", GUILayout.Width( 150.0f ) );
 			{
 				EditorGUILayout.TextField( r._Answer );

@@ -17,13 +17,13 @@ namespace Google2u
 		public string _Dialog;
 		public int _MovieID;
 		public string _SceneType;
-		public int _AnswerID;
+		public System.Collections.Generic.List<string> _AnswerIDList = new System.Collections.Generic.List<string>();
 		public System.Collections.Generic.List<string> _NextIDList = new System.Collections.Generic.List<string>();
 		public string _FileName;
 		public string _MovieTime;
 		public string _YoutubeLink;
 		public string _Comment;
-		public MovieRow(string __ID, string __Dialog, string __MovieID, string __SceneType, string __AnswerID, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
+		public MovieRow(string __ID, string __Dialog, string __MovieID, string __SceneType, string __AnswerIDList, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
 		{
 			_Dialog = __Dialog.Trim();
 			{
@@ -35,11 +35,11 @@ namespace Google2u
 			}
 			_SceneType = __SceneType.Trim();
 			{
-			int res;
-				if(int.TryParse(__AnswerID, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
-					_AnswerID = res;
-				else
-					Debug.LogError("Failed To Convert _AnswerID string: "+ __AnswerID +" to int");
+				string []result = __AnswerIDList.Split("|".ToCharArray(),System.StringSplitOptions.RemoveEmptyEntries);
+				for(int i = 0; i < result.Length; i++)
+				{
+					_AnswerIDList.Add( result[i].Trim() );
+				}
 			}
 			{
 				string []result = __NextIDList.Split("|".ToCharArray(),System.StringSplitOptions.RemoveEmptyEntries);
@@ -79,7 +79,7 @@ namespace Google2u
 					ret = _SceneType.ToString();
 					break;
 				case 3:
-					ret = _AnswerID.ToString();
+					ret = _AnswerIDList.ToString();
 					break;
 				case 4:
 					ret = _NextIDList.ToString();
@@ -115,8 +115,8 @@ namespace Google2u
 				case "_SceneType":
 					ret = _SceneType.ToString();
 					break;
-				case "_AnswerID":
-					ret = _AnswerID.ToString();
+				case "_AnswerIDList":
+					ret = _AnswerIDList.ToString();
 					break;
 				case "_NextIDList":
 					ret = _NextIDList.ToString();
@@ -143,7 +143,7 @@ namespace Google2u
 			ret += "{" + "_Dialog" + " : " + _Dialog.ToString() + "} ";
 			ret += "{" + "_MovieID" + " : " + _MovieID.ToString() + "} ";
 			ret += "{" + "_SceneType" + " : " + _SceneType.ToString() + "} ";
-			ret += "{" + "_AnswerID" + " : " + _AnswerID.ToString() + "} ";
+			ret += "{" + "_AnswerIDList" + " : " + _AnswerIDList.ToString() + "} ";
 			ret += "{" + "_NextIDList" + " : " + _NextIDList.ToString() + "} ";
 			ret += "{" + "_FileName" + " : " + _FileName.ToString() + "} ";
 			ret += "{" + "_MovieTime" + " : " + _MovieTime.ToString() + "} ";
