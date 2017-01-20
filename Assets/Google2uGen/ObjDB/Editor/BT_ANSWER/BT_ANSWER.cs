@@ -3,14 +3,14 @@ using UnityEditor;
 
 namespace Google2u
 {
-	[CustomEditor(typeof(Answer))]
-	public class AnswerEditor : Editor
+	[CustomEditor(typeof(BT_ANSWER))]
+	public class BT_ANSWEREditor : Editor
 	{
 		public int Index = 0;
 		public override void OnInspectorGUI ()
 		{
-			Answer s = target as Answer;
-			AnswerRow r = s.Rows[ Index ];
+			BT_ANSWER s = target as BT_ANSWER;
+			BT_ANSWERRow r = s.Rows[ Index ];
 
 			EditorGUILayout.BeginHorizontal();
 			if ( GUILayout.Button("<<") )
@@ -40,6 +40,13 @@ namespace Google2u
 			GUILayout.Label( "ID", GUILayout.Width( 150.0f ) );
 			{
 				EditorGUILayout.LabelField( s.rowNames[ Index ] );
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			GUILayout.Label( "_AnswerID", GUILayout.Width( 150.0f ) );
+			{
+				EditorGUILayout.IntField( r._AnswerID );
 			}
 			EditorGUILayout.EndHorizontal();
 

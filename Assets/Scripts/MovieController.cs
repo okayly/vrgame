@@ -7,35 +7,35 @@ using RenderHeads.Media.AVProVideo;
 
 public class MovieController : MonoBehaviour {
 	private static string Folder = "VRFiles/";
-	private static string StartVideoID = "vr_1";
 
-	private const int BUTTON_WIDTH = 100;
-	private const int BUTTON_HEIGHT = 50;
+	private const int BUTTON_WIDTH = 200;
+	private const int BUTTON_HEIGHT = 100;
+	private int ButtonY = 0;
 
-	private string answerA = "A";
-	private string answerB = "B";
-	private string answerC = "C";
+	// GUI Button Text
+	private string[] answerText = new string[ 3 ];
 
-	private Google2u.Movie _Movie;
-	private Google2u.Answer _Answer;
-	private Google2u.MovieRow _currMovieRow;
+	public string this [int i] { get { return answerText [i]; } set { answerText [i] = value; } }
 
 	public MediaPlayer playingMovie;
+	private TableData tableData;
 
+	private int currID = 10;
 	private bool showAnswer = false;
-	private List<string> answerIDList = new List<string>();
 
 	// Use this for initialization
 	void Start () {
-		_Movie = GetComponent<Google2u.Movie> ();
-		_Answer = GetComponent<Google2u.Answer> ();
+		// Answer Button Position Y
+		ButtonY = Screen.height - (BUTTON_HEIGHT * 2);
 
-		_currMovieRow = _Movie.GetRow (StartVideoID);
+		// Table Data
+		tableData = GetComponent<TableData> ();
 
 		// attach event function
 		playingMovie.Events.AddListener(OnVideoEvent);
 
-		PlayVideo (_currMovieRow._FileName);
+		// Play first video
+		PlayVideo (tableData.movieList[currID].FileName);
 	}
 
 	private void PlayVideo(string fileName) {
@@ -48,37 +48,16 @@ public class MovieController : MonoBehaviour {
 	}
 
 	private void NextVideo() {
-		if (_currMovieRow._NextIDList.Count <= 0) {
-			Debug.Log("Game End");
-		} else if (_currMovieRow._NextIDList.Count == 1) {
-			if (showAnswer == true)
-				showAnswer = false;
-			
-			_currMovieRow = _Movie.GetRow (_currMovieRow._NextIDList[0]);
-
-			PlayVideo(_currMovieRow._FileName);
-		} else {
-			showAnswer = true;
-
-			if (_currMovieRow._NextIDList.Count < 3) {
-				SetAnswerText(answerA, _currMovieRow._AnswerIDList [0]);
-				SetAnswerText(answerB, _currMovieRow._AnswerIDList [1]);
-			} else {
-				
-			}
-		}
-	}
-
-	private void SetAnswerText(string btnText, string answerID) {
-		Google2u.AnswerRow rowAnswer = _Answer.GetRow (answerID);
-		btnText = rowAnswer._Answer;
+		int nextID = ++currID;
+		PlayVideo (tableData.movieList [nextID].FileName);
+//		Debug.Log(string.Format("{0} Next fileName: {1}", nextID, tableData.movieList [nextID].FileName));
 	}
 
 	// Callback function to handel events
 	public void OnVideoEvent(MediaPlayer mp, MediaPlayerEvent.EventType et, ErrorCode errorCode) {
 		switch (et) {
 		case MediaPlayerEvent.EventType.ReadyToPlay:
-			mp.Control.Play ();
+//			mp.Control.Play ();
 			break;
 
 		case MediaPlayerEvent.EventType.FirstFrameReady:
@@ -86,59 +65,71 @@ public class MovieController : MonoBehaviour {
 			break;
 
 		case MediaPlayerEvent.EventType.FinishedPlaying:
-			Debug.Log ("Finished playing");
-			NextVideo ();
-			break;
+			{
+				Debug.Log ("Finished playing");
+
+				if (tableData.movieList [currID].SceneType == "talk" || tableData.movieList [currID].SceneType == "answer") {
+					Debug.Log ("Talk");
+					NextVideo ();
+				} else {
+					Debug.Log ("Question");
+
+					// Set answer text
+					int buttonID = 0;
+					foreach (TableData.NextData nextData in tableData.movieList[currID].nextList) {
+						answerText [buttonID] = nextData.Answer;
+						buttonID++;
+					}
+
+					showAnswer = true;
+				}
+				break;
+			}
+		}
+	}
+
+	private void ShowTwoAnswer() {
+		if (GUI.Button(new Rect(BUTTON_WIDTH, ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[0])) {
+			Debug.Log ("AnswerA");
+
+			currID = tableData.movieList [currID].nextList [0].NextID;
+			Debug.Log (string.Format ("AnswerA currID: {0}", currID));
+			PlayVideo (tableData.movieList [currID].FileName);
+		}
+
+		if (GUI.Button(new Rect(Screen.width - (BUTTON_WIDTH * 2), ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[1])) {
+			Debug.Log ("AnswerB");
+
+			currID = tableData.movieList [currID].nextList [1].NextID;
+			Debug.Log (string.Format ("AnswerB currID: {0}", currID));
+			PlayVideo (tableData.movieList [currID].FileName);
+		}
+	}
+
+	private void ShowThreeAnswer() {
+		if (GUI.Button(new Rect(BUTTON_WIDTH, ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[0])) {
+			Debug.Log ("AnswerA");
+		}
+
+		if (GUI.Button (new Rect (Screen.width - (BUTTON_WIDTH / 2), ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[1])) {
+			Debug.Log ("AnswerB");
+		}
+
+		if (GUI.Button(new Rect(Screen.width - (BUTTON_WIDTH * 2), ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[2])) {
+			Debug.Log ("AnswerC");
 		}
 	}
 
 	void OnGUI() {
 		if (showAnswer) {
-			int buttonY = Screen.height - (BUTTON_HEIGHT * 2);
-
-			if (_currMovieRow._NextIDList.Count < 3) {
-				if (GUI.Button(new Rect(BUTTON_WIDTH, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerA)) {
-					Debug.Log ("AnswerA");
-				}
-
-				if (GUI.Button(new Rect(Screen.width - (BUTTON_WIDTH * 2), buttonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerB)) {
-					Debug.Log ("AnswerB");
-				}
-			} else {
-				if (GUI.Button(new Rect(BUTTON_WIDTH, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerA)) {
-					Debug.Log ("AnswerA");
-				}
-
-				if (GUI.Button (new Rect (Screen.width - (BUTTON_WIDTH / 2), buttonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerB)) {
-					Debug.Log ("AnswerB");
-				}
-
-				if (GUI.Button(new Rect(Screen.width - (BUTTON_WIDTH * 2), buttonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerC)) {
-					Debug.Log ("AnswerC");
-				}
+			switch (tableData.movieList [currID].nextList.Count) {
+			case 2:
+				ShowTwoAnswer ();
+				break;
+			case 3:				
+				ShowThreeAnswer ();
+				break;
 			}
-		}
-	}
-
-	// Answer class
-	class AnswerData {
-		public string text;
-		public string next_id;
-
-		public string Answer { get { return text; } set { text = value; } }
-		public string NextID { get { return next_id; } set { next_id = value; } }
-	}
-
-	class MovieData {
-		public List<string> nextIDList = new List<string> ();
-		public List<AnswerData> answerList = new List<AnswerData> ();
-	}
-
-	private void LoadTable() {
-		Google2u.Movie movie = GetComponent<Google2u.Movie> ();
-		Google2u.Answer answer = GetComponent<Google2u.Answer> ();
-
-		foreach (Google2u.MovieRow row in movie.Rows) {
 		}
 	}
 }

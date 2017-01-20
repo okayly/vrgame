@@ -3,16 +3,16 @@ using UnityEditor;
 
 namespace Google2u
 {
-	[CustomEditor(typeof(Movie))]
-	public class MovieEditor : Editor
+	[CustomEditor(typeof(BT_MOVIE))]
+	public class BT_MOVIEEditor : Editor
 	{
 		public int Index = 0;
 		public int _AnswerIDList_Index = 0;
 		public int _NextIDList_Index = 0;
 		public override void OnInspectorGUI ()
 		{
-			Movie s = target as Movie;
-			MovieRow r = s.Rows[ Index ];
+			BT_MOVIE s = target as BT_MOVIE;
+			BT_MOVIERow r = s.Rows[ Index ];
 
 			EditorGUILayout.BeginHorizontal();
 			if ( GUILayout.Button("<<") )
@@ -60,6 +60,13 @@ namespace Google2u
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
+			GUILayout.Label( "_SceneID", GUILayout.Width( 150.0f ) );
+			{
+				EditorGUILayout.IntField( r._SceneID );
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
 			GUILayout.Label( "_SceneType", GUILayout.Width( 150.0f ) );
 			{
 				EditorGUILayout.TextField( r._SceneType );
@@ -92,7 +99,7 @@ namespace Google2u
 			    	if ( _AnswerIDList_Index >= r._AnswerIDList.Count )
 		        		_AnswerIDList_Index = 0;
 				}
-				EditorGUILayout.TextField( r._AnswerIDList[_AnswerIDList_Index] );
+				EditorGUILayout.IntField( r._AnswerIDList[_AnswerIDList_Index] );
 			}
 			EditorGUILayout.EndHorizontal();
 
@@ -122,7 +129,7 @@ namespace Google2u
 			    	if ( _NextIDList_Index >= r._NextIDList.Count )
 		        		_NextIDList_Index = 0;
 				}
-				EditorGUILayout.TextField( r._NextIDList[_NextIDList_Index] );
+				EditorGUILayout.IntField( r._NextIDList[_NextIDList_Index] );
 			}
 			EditorGUILayout.EndHorizontal();
 

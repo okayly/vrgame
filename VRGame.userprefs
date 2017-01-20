@@ -1,10 +1,35 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MovieController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MovieController.cs">
     <Files>
-      <File FileName="Assets/Scripts/MovieController.cs" Line="125" Column="22" />
-      <File FileName="Assets/Google2uGen/ObjDB/Resources/Movie/Movie.cs" Line="26" Column="42" />
+      <File FileName="Assets\Scripts\MovieController.cs" Line="105" Column="40" />
+      <File FileName="Assets\Scripts\TableData.cs" Line="30" Column="31" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="VRGame" expanded="True">
+            <Node name="Assembly-CSharp" expanded="True">
+              <Node name="Google2uGen" expanded="True">
+                <Node name="ObjDB" expanded="True">
+                  <Node name="Resources" expanded="True">
+                    <Node name="BT_MOVIE" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="Scripts" expanded="True">
+                <Node name="MovieController.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State name="__root__">
+          <Node name="VRGame" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

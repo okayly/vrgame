@@ -12,18 +12,19 @@ using System.Globalization;
 namespace Google2u
 {
 	[System.Serializable]
-	public class MovieRow : IGoogle2uRow
+	public class BT_MOVIERow : IGoogle2uRow
 	{
 		public string _Dialog;
 		public int _MovieID;
+		public int _SceneID;
 		public string _SceneType;
-		public System.Collections.Generic.List<string> _AnswerIDList = new System.Collections.Generic.List<string>();
-		public System.Collections.Generic.List<string> _NextIDList = new System.Collections.Generic.List<string>();
+		public System.Collections.Generic.List<int> _AnswerIDList = new System.Collections.Generic.List<int>();
+		public System.Collections.Generic.List<int> _NextIDList = new System.Collections.Generic.List<int>();
 		public string _FileName;
 		public string _MovieTime;
 		public string _YoutubeLink;
 		public string _Comment;
-		public MovieRow(string __ID, string __Dialog, string __MovieID, string __SceneType, string __AnswerIDList, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
+		public BT_MOVIERow(string __G2U_ID, string __Dialog, string __MovieID, string __SceneID, string __SceneType, string __AnswerIDList, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
 		{
 			_Dialog = __Dialog.Trim();
 			{
@@ -33,19 +34,40 @@ namespace Google2u
 				else
 					Debug.LogError("Failed To Convert _MovieID string: "+ __MovieID +" to int");
 			}
+			{
+			int res;
+				if(int.TryParse(__SceneID, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+					_SceneID = res;
+				else
+					Debug.LogError("Failed To Convert _SceneID string: "+ __SceneID +" to int");
+			}
 			_SceneType = __SceneType.Trim();
 			{
-				string []result = __AnswerIDList.Split("|".ToCharArray(),System.StringSplitOptions.RemoveEmptyEntries);
+				int res;
+				string []result = __AnswerIDList.Split(",".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
 				for(int i = 0; i < result.Length; i++)
 				{
-					_AnswerIDList.Add( result[i].Trim() );
+					if(int.TryParse(result[i], NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+						_AnswerIDList.Add( res );
+					else
+					{
+						_AnswerIDList.Add( 0 );
+						Debug.LogError("Failed To Convert _AnswerIDList string: "+ result[i] +" to int");
+					}
 				}
 			}
 			{
-				string []result = __NextIDList.Split("|".ToCharArray(),System.StringSplitOptions.RemoveEmptyEntries);
+				int res;
+				string []result = __NextIDList.Split(",".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
 				for(int i = 0; i < result.Length; i++)
 				{
-					_NextIDList.Add( result[i].Trim() );
+					if(int.TryParse(result[i], NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+						_NextIDList.Add( res );
+					else
+					{
+						_NextIDList.Add( 0 );
+						Debug.LogError("Failed To Convert _NextIDList string: "+ result[i] +" to int");
+					}
 				}
 			}
 			_FileName = __FileName.Trim();
@@ -54,7 +76,7 @@ namespace Google2u
 			_Comment = __Comment.Trim();
 		}
 
-		public int Length { get { return 9; } }
+		public int Length { get { return 10; } }
 
 		public string this[int i]
 		{
@@ -76,24 +98,27 @@ namespace Google2u
 					ret = _MovieID.ToString();
 					break;
 				case 2:
-					ret = _SceneType.ToString();
+					ret = _SceneID.ToString();
 					break;
 				case 3:
-					ret = _AnswerIDList.ToString();
+					ret = _SceneType.ToString();
 					break;
 				case 4:
-					ret = _NextIDList.ToString();
+					ret = _AnswerIDList.ToString();
 					break;
 				case 5:
-					ret = _FileName.ToString();
+					ret = _NextIDList.ToString();
 					break;
 				case 6:
-					ret = _MovieTime.ToString();
+					ret = _FileName.ToString();
 					break;
 				case 7:
-					ret = _YoutubeLink.ToString();
+					ret = _MovieTime.ToString();
 					break;
 				case 8:
+					ret = _YoutubeLink.ToString();
+					break;
+				case 9:
 					ret = _Comment.ToString();
 					break;
 			}
@@ -111,6 +136,9 @@ namespace Google2u
 					break;
 				case "_MovieID":
 					ret = _MovieID.ToString();
+					break;
+				case "_SceneID":
+					ret = _SceneID.ToString();
 					break;
 				case "_SceneType":
 					ret = _SceneType.ToString();
@@ -142,6 +170,7 @@ namespace Google2u
 			string ret = System.String.Empty;
 			ret += "{" + "_Dialog" + " : " + _Dialog.ToString() + "} ";
 			ret += "{" + "_MovieID" + " : " + _MovieID.ToString() + "} ";
+			ret += "{" + "_SceneID" + " : " + _SceneID.ToString() + "} ";
 			ret += "{" + "_SceneType" + " : " + _SceneType.ToString() + "} ";
 			ret += "{" + "_AnswerIDList" + " : " + _AnswerIDList.ToString() + "} ";
 			ret += "{" + "_NextIDList" + " : " + _NextIDList.ToString() + "} ";
@@ -152,7 +181,7 @@ namespace Google2u
 			return ret;
 		}
 	}
-	public class Movie :  Google2uComponentBase, IGoogle2uDB
+	public class BT_MOVIE :  Google2uComponentBase, IGoogle2uDB
 	{
 		public enum rowIds {
 			vr_1, vr_2, vr_3, vr_4, vr_5, vr_6, vr_7, vr_8, vr_9, vr_10, vr_11, vr_12, vr_13, vr_14, vr_15, vr_16, vr_17, vr_18
@@ -164,10 +193,10 @@ namespace Google2u
 			, "vr_19", "vr_20", "vr_21", "vr_22", "vr_23", "vr_24", "vr_25", "vr_26", "vr_27", "vr_28", "vr_29", "vr_30", "vr_31", "vr_32", "vr_33", "vr_34", "vr_35", "vr_36", "vr_37", "vr_38"
 			, "vr_39", "vr_40", "vr_41"
 		};
-		public System.Collections.Generic.List<MovieRow> Rows = new System.Collections.Generic.List<MovieRow>();
+		public System.Collections.Generic.List<BT_MOVIERow> Rows = new System.Collections.Generic.List<BT_MOVIERow>();
 		public override void AddRowGeneric (System.Collections.Generic.List<string> input)
 		{
-			Rows.Add(new MovieRow(input[0],input[1],input[2],input[3],input[4],input[5],input[6],input[7],input[8],input[9]));
+			Rows.Add(new BT_MOVIERow(input[0],input[1],input[2],input[3],input[4],input[5],input[6],input[7],input[8],input[9],input[10]));
 		}
 		public override void Clear ()
 		{
@@ -198,9 +227,9 @@ namespace Google2u
 			}
 			return ret;
 		}
-		public MovieRow GetRow(rowIds in_RowID)
+		public BT_MOVIERow GetRow(rowIds in_RowID)
 		{
-			MovieRow ret = null;
+			BT_MOVIERow ret = null;
 			try
 			{
 				ret = Rows[(int)in_RowID];
@@ -211,9 +240,9 @@ namespace Google2u
 			}
 			return ret;
 		}
-		public MovieRow GetRow(string in_RowString)
+		public BT_MOVIERow GetRow(string in_RowString)
 		{
-			MovieRow ret = null;
+			BT_MOVIERow ret = null;
 			try
 			{
 				ret = Rows[(int)System.Enum.Parse(typeof(rowIds), in_RowString)];
