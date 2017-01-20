@@ -19,5 +19,6 @@ Desktop.ini
 
 # Video files
 Assets/StreamingAssets/AVProVideoSamples/
-Assets/StreamingAssets/VRFiles/
+Assets/StreamingAssets/VRFiles/*
+
 # Git
