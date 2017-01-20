@@ -122,8 +122,11 @@ public class MovieController : MonoBehaviour {
 
 	// Answer class
 	class AnswerData {
-		public string answer;
-		public string nextID;
+		public string text;
+		public string next_id;
+
+		public string Answer { get { return text; } set { text = value; } }
+		public string NextID { get { return next_id; } set { next_id = value; } }
 	}
 
 	class MovieData {
