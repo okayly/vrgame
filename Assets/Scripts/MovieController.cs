@@ -8,9 +8,9 @@ using RenderHeads.Media.AVProVideo;
 public class MovieController : MonoBehaviour {
 	private static string Folder = "VRFiles/";
 
-	private const int BUTTON_WIDTH = 200;
-	private const int BUTTON_HEIGHT = 100;
-	private int ButtonY = 0;
+	private Rect button = new Rect ( 0, 0, 500, 50 );
+	private int buttonStartY = 0;
+	private int buttonGapH = 10;
 
 	// GUI Button Text
 	private string[] answerText = new string[ 3 ];
@@ -20,44 +20,43 @@ public class MovieController : MonoBehaviour {
 	public MediaPlayer playingMovie;
 	private TableData tableData;
 
-	private int currID = 10;
+	private int currSceneID = 1;
 	private bool showAnswer = false;
+
+	private enum State {
+		Loading,
+		Playing,
+		Finished,
+	}
+
+	private State _state = State.Loading;
 
 	// Use this for initialization
 	void Start () {
-		// Answer Button Position Y
-		ButtonY = Screen.height - (BUTTON_HEIGHT * 2);
-
 		// Table Data
 		tableData = GetComponent<TableData> ();
 
-		// attach event function
+		// attach event function - Move to Editor
 		playingMovie.Events.AddListener(OnVideoEvent);
 
 		// Play first video
-		PlayVideo (tableData.movieList[currID].FileName);
+		PlayVideo ();
 	}
 
-	private void PlayVideo(string fileName) {
-		Debug.Log(string.Format("PlayMovie: {0}", fileName));
+	private void PlayVideo() {
+		string fileName = tableData.movieMap [currSceneID].FileName;
+		Debug.Log(string.Format("currSceneID: {0}, fileName: {1}", currSceneID, fileName));
 			
 		string filePath = Folder + fileName;
-
-		playingMovie.m_AutoStart = true;
-		playingMovie.OpenVideoFromFile (MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, filePath);
-	}
-
-	private void NextVideo() {
-		int nextID = ++currID;
-		PlayVideo (tableData.movieList [nextID].FileName);
-//		Debug.Log(string.Format("{0} Next fileName: {1}", nextID, tableData.movieList [nextID].FileName));
+		playingMovie.OpenVideoFromFile (MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, filePath, false);
 	}
 
 	// Callback function to handel events
 	public void OnVideoEvent(MediaPlayer mp, MediaPlayerEvent.EventType et, ErrorCode errorCode) {
 		switch (et) {
 		case MediaPlayerEvent.EventType.ReadyToPlay:
-//			mp.Control.Play ();
+			Debug.Log (string.Format ("MediaPlayerEvent.EventType.ReadyToPlay: {0}", playingMovie.m_VideoPath));
+			mp.Control.Play ();
 			break;
 
 		case MediaPlayerEvent.EventType.FirstFrameReady:
@@ -66,63 +65,38 @@ public class MovieController : MonoBehaviour {
 
 		case MediaPlayerEvent.EventType.FinishedPlaying:
 			{
-				Debug.Log ("Finished playing");
+				Debug.Log (string.Format("MediaPlayerEvent.EventType.FinishedPlaying: {0}", tableData.movieMap [currSceneID].SceneType));
+				if (tableData.movieMap [currSceneID].SceneType == "talk" || tableData.movieMap [currSceneID].SceneType == "answer") {
+					currSceneID = tableData.movieMap [currSceneID].nextList [0].NextID;
+					PlayVideo ();
 
-				if (tableData.movieList [currID].SceneType == "talk" || tableData.movieList [currID].SceneType == "answer") {
-					Debug.Log ("Talk");
-					NextVideo ();
 				} else {
-					Debug.Log ("Question");
+					// Set answer position
+					button.x = (Screen.width - button.width) / 2;
+					button.y = Screen.height - ( (button.height + buttonGapH) * tableData.movieMap[currSceneID].nextList.Count );
 
 					// Set answer text
 					int buttonID = 0;
-					foreach (TableData.NextData nextData in tableData.movieList[currID].nextList) {
+					foreach (TableData.NextData nextData in tableData.movieMap[currSceneID].nextList) {
 						answerText [buttonID] = nextData.Answer;
 						buttonID++;
 					}
 
 					showAnswer = true;
 				}
-				break;
+
 			}
-		}
-	}
+			break;
 
-	private void ShowTwoAnswer() {
-		if (GUI.Button(new Rect(BUTTON_WIDTH, ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[0])) {
-			Debug.Log ("AnswerA");
-
-			currID = tableData.movieList [currID].nextList [0].NextID;
-			Debug.Log (string.Format ("AnswerA currID: {0}", currID));
-			PlayVideo (tableData.movieList [currID].FileName);
-		}
-
-		if (GUI.Button(new Rect(Screen.width - (BUTTON_WIDTH * 2), ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[1])) {
-			Debug.Log ("AnswerB");
-
-			currID = tableData.movieList [currID].nextList [1].NextID;
-			Debug.Log (string.Format ("AnswerB currID: {0}", currID));
-			PlayVideo (tableData.movieList [currID].FileName);
-		}
-	}
-
-	private void ShowThreeAnswer() {
-		if (GUI.Button(new Rect(BUTTON_WIDTH, ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[0])) {
-			Debug.Log ("AnswerA");
-		}
-
-		if (GUI.Button (new Rect (Screen.width - (BUTTON_WIDTH / 2), ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[1])) {
-			Debug.Log ("AnswerB");
-		}
-
-		if (GUI.Button(new Rect(Screen.width - (BUTTON_WIDTH * 2), ButtonY, BUTTON_WIDTH, BUTTON_HEIGHT), answerText[2])) {
-			Debug.Log ("AnswerC");
+		case MediaPlayerEvent.EventType.Error:
+			Debug.Log ("ErrorCode: " + errorCode);
+			break;
 		}
 	}
 
 	void OnGUI() {
 		if (showAnswer) {
-			switch (tableData.movieList [currID].nextList.Count) {
+			switch (tableData.movieMap [currSceneID].nextList.Count) {
 			case 2:
 				ShowTwoAnswer ();
 				break;
@@ -132,4 +106,58 @@ public class MovieController : MonoBehaviour {
 			}
 		}
 	}
+
+	private void SelectAnswer(int answerID) {
+		if ( answerID >= 0 && answerID < 3 ) {
+			currSceneID = tableData.movieMap [currSceneID].nextList [answerID].NextID;
+			PlayVideo ();
+			showAnswer = false;
+
+			Debug.Log (string.Format ("AnswerA currSceneID: {0}, fineName: {1}", currSceneID, tableData.movieMap [currSceneID].FileName));
+		}
+	}
+
+	private void ShowTwoAnswer() {
+		if (GUI.Button(new Rect(button.x, button.y, button.width, button.height), answerText[0])) {
+			SelectAnswer (0);
+		}
+
+		if (GUI.Button(new Rect(button.x, button.y + (button.height + buttonGapH), button.width, button.height), answerText[1])) {
+			SelectAnswer (1);
+		}
+	}
+
+	private void ShowThreeAnswer() {
+		if (GUI.Button(new Rect(button.x, button.y, button.width, button.height), answerText[0])) {
+			SelectAnswer (0);
+		}
+
+		if (GUI.Button(new Rect(button.x, button.y + (button.height + buttonGapH), button.width, button.height), answerText[1])) {
+			SelectAnswer (1);
+		}
+
+		if (GUI.Button(new Rect(button.x, button.y + (button.height + buttonGapH) * 2, button.width, button.height), answerText[2])) {
+			SelectAnswer (2);
+		}
+	}
+
+	//	void LateUpdate(){
+	//		if (_state == State.Loading) {
+	////			Debug.Log (string.Format ("state: {0}", _state));
+	//
+	//			// Finsished Loading
+	//			if (IsVideoLoaded (playingMovie)) {
+	//				Debug.Log ("Movie Play");
+	//				playingMovie.Play ();
+	//
+	//				_state = State.Playing;
+	//			}
+	//		} else if (_state == State.Finished) {
+	//			Debug.Log ("Do Something");
+	//		}
+	//	}
+	//
+	//	private static bool IsVideoLoaded(MediaPlayer player) {
+	//		return (player != null && player.Control != null && player.Control.HasMetaData () && player.Control.CanPlay () && player.TextureProducer.GetTextureFrameCount () > 0);
+	//	}
 }

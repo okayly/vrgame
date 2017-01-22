@@ -18,13 +18,13 @@ namespace Google2u
 		public int _MovieID;
 		public int _SceneID;
 		public string _SceneType;
-		public System.Collections.Generic.List<int> _AnswerIDList = new System.Collections.Generic.List<int>();
 		public System.Collections.Generic.List<int> _NextIDList = new System.Collections.Generic.List<int>();
+		public System.Collections.Generic.List<int> _AnswerIDList = new System.Collections.Generic.List<int>();
 		public string _FileName;
 		public string _MovieTime;
 		public string _YoutubeLink;
 		public string _Comment;
-		public BT_MOVIERow(string __G2U_ID, string __Dialog, string __MovieID, string __SceneID, string __SceneType, string __AnswerIDList, string __NextIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
+		public BT_MOVIERow(string __G2U_ID, string __Dialog, string __MovieID, string __SceneID, string __SceneType, string __NextIDList, string __AnswerIDList, string __FileName, string __MovieTime, string __YoutubeLink, string __Comment) 
 		{
 			_Dialog = __Dialog.Trim();
 			{
@@ -44,20 +44,6 @@ namespace Google2u
 			_SceneType = __SceneType.Trim();
 			{
 				int res;
-				string []result = __AnswerIDList.Split(",".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
-				for(int i = 0; i < result.Length; i++)
-				{
-					if(int.TryParse(result[i], NumberStyles.Any, CultureInfo.InvariantCulture, out res))
-						_AnswerIDList.Add( res );
-					else
-					{
-						_AnswerIDList.Add( 0 );
-						Debug.LogError("Failed To Convert _AnswerIDList string: "+ result[i] +" to int");
-					}
-				}
-			}
-			{
-				int res;
 				string []result = __NextIDList.Split(",".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
 				for(int i = 0; i < result.Length; i++)
 				{
@@ -67,6 +53,20 @@ namespace Google2u
 					{
 						_NextIDList.Add( 0 );
 						Debug.LogError("Failed To Convert _NextIDList string: "+ result[i] +" to int");
+					}
+				}
+			}
+			{
+				int res;
+				string []result = __AnswerIDList.Split(",".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
+				for(int i = 0; i < result.Length; i++)
+				{
+					if(int.TryParse(result[i], NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+						_AnswerIDList.Add( res );
+					else
+					{
+						_AnswerIDList.Add( 0 );
+						Debug.LogError("Failed To Convert _AnswerIDList string: "+ result[i] +" to int");
 					}
 				}
 			}
@@ -104,10 +104,10 @@ namespace Google2u
 					ret = _SceneType.ToString();
 					break;
 				case 4:
-					ret = _AnswerIDList.ToString();
+					ret = _NextIDList.ToString();
 					break;
 				case 5:
-					ret = _NextIDList.ToString();
+					ret = _AnswerIDList.ToString();
 					break;
 				case 6:
 					ret = _FileName.ToString();
@@ -143,11 +143,11 @@ namespace Google2u
 				case "_SceneType":
 					ret = _SceneType.ToString();
 					break;
-				case "_AnswerIDList":
-					ret = _AnswerIDList.ToString();
-					break;
 				case "_NextIDList":
 					ret = _NextIDList.ToString();
+					break;
+				case "_AnswerIDList":
+					ret = _AnswerIDList.ToString();
 					break;
 				case "_FileName":
 					ret = _FileName.ToString();
@@ -172,8 +172,8 @@ namespace Google2u
 			ret += "{" + "_MovieID" + " : " + _MovieID.ToString() + "} ";
 			ret += "{" + "_SceneID" + " : " + _SceneID.ToString() + "} ";
 			ret += "{" + "_SceneType" + " : " + _SceneType.ToString() + "} ";
-			ret += "{" + "_AnswerIDList" + " : " + _AnswerIDList.ToString() + "} ";
 			ret += "{" + "_NextIDList" + " : " + _NextIDList.ToString() + "} ";
+			ret += "{" + "_AnswerIDList" + " : " + _AnswerIDList.ToString() + "} ";
 			ret += "{" + "_FileName" + " : " + _FileName.ToString() + "} ";
 			ret += "{" + "_MovieTime" + " : " + _MovieTime.ToString() + "} ";
 			ret += "{" + "_YoutubeLink" + " : " + _YoutubeLink.ToString() + "} ";

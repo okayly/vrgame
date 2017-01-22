@@ -7,8 +7,8 @@ namespace Google2u
 	public class BT_MOVIEEditor : Editor
 	{
 		public int Index = 0;
-		public int _AnswerIDList_Index = 0;
 		public int _NextIDList_Index = 0;
+		public int _AnswerIDList_Index = 0;
 		public override void OnInspectorGUI ()
 		{
 			BT_MOVIE s = target as BT_MOVIE;
@@ -74,36 +74,6 @@ namespace Google2u
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			if ( r._AnswerIDList.Count == 0 )
-			{
-			    GUILayout.Label( "_AnswerIDList", GUILayout.Width( 150.0f ) );
-			    {
-			    	EditorGUILayout.LabelField( "Empty Array" );
-			    }
-			}
-			else
-			{
-			    GUILayout.Label( "_AnswerIDList", GUILayout.Width( 130.0f ) );
-			    if ( _AnswerIDList_Index >= r._AnswerIDList.Count )
-				    _AnswerIDList_Index = 0;
-			    if ( GUILayout.Button("<", GUILayout.Width( 18.0f )) )
-			    {
-			    	_AnswerIDList_Index -= 1;
-			    	if ( _AnswerIDList_Index < 0 )
-			    		_AnswerIDList_Index = r._AnswerIDList.Count - 1;
-			    }
-			    EditorGUILayout.LabelField(_AnswerIDList_Index.ToString(), GUILayout.Width( 15.0f ));
-			    if ( GUILayout.Button(">", GUILayout.Width( 18.0f )) )
-			    {
-			    	_AnswerIDList_Index += 1;
-			    	if ( _AnswerIDList_Index >= r._AnswerIDList.Count )
-		        		_AnswerIDList_Index = 0;
-				}
-				EditorGUILayout.IntField( r._AnswerIDList[_AnswerIDList_Index] );
-			}
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			if ( r._NextIDList.Count == 0 )
 			{
 			    GUILayout.Label( "_NextIDList", GUILayout.Width( 150.0f ) );
@@ -130,6 +100,36 @@ namespace Google2u
 		        		_NextIDList_Index = 0;
 				}
 				EditorGUILayout.IntField( r._NextIDList[_NextIDList_Index] );
+			}
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			if ( r._AnswerIDList.Count == 0 )
+			{
+			    GUILayout.Label( "_AnswerIDList", GUILayout.Width( 150.0f ) );
+			    {
+			    	EditorGUILayout.LabelField( "Empty Array" );
+			    }
+			}
+			else
+			{
+			    GUILayout.Label( "_AnswerIDList", GUILayout.Width( 130.0f ) );
+			    if ( _AnswerIDList_Index >= r._AnswerIDList.Count )
+				    _AnswerIDList_Index = 0;
+			    if ( GUILayout.Button("<", GUILayout.Width( 18.0f )) )
+			    {
+			    	_AnswerIDList_Index -= 1;
+			    	if ( _AnswerIDList_Index < 0 )
+			    		_AnswerIDList_Index = r._AnswerIDList.Count - 1;
+			    }
+			    EditorGUILayout.LabelField(_AnswerIDList_Index.ToString(), GUILayout.Width( 15.0f ));
+			    if ( GUILayout.Button(">", GUILayout.Width( 18.0f )) )
+			    {
+			    	_AnswerIDList_Index += 1;
+			    	if ( _AnswerIDList_Index >= r._AnswerIDList.Count )
+		        		_AnswerIDList_Index = 0;
+				}
+				EditorGUILayout.IntField( r._AnswerIDList[_AnswerIDList_Index] );
 			}
 			EditorGUILayout.EndHorizontal();
 
