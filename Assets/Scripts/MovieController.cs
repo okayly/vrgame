@@ -9,7 +9,6 @@ public class MovieController : MonoBehaviour {
 	private static string Folder = "VRFiles/";
 
 	private Rect button = new Rect ( 0, 0, 500, 50 );
-	private int buttonStartY = 0;
 	private int buttonGapH = 10;
 
 	// GUI Button Text
@@ -20,7 +19,7 @@ public class MovieController : MonoBehaviour {
 	public MediaPlayer playingMovie;
 	private TableData tableData;
 
-	private int currSceneID = 1;
+	public int currSceneID = 1;
 	private bool showAnswer = false;
 
 	private enum State {
@@ -29,7 +28,7 @@ public class MovieController : MonoBehaviour {
 		Finished,
 	}
 
-	private State _state = State.Loading;
+//	private State _state = State.Loading;
 
 	// Use this for initialization
 	void Start () {
