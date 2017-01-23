@@ -31,6 +31,7 @@ public class TableData : MonoBehaviour {
 	}
 
 	public List<MovieData> movieList = new List<MovieData>();
+	public Dictionary<int, MovieData> movieMap = new Dictionary<int, MovieData>();
 
 	private void LoadTable() {
 		Google2u.BT_MOVIE btMovie = GetComponent<Google2u.BT_MOVIE> ();
@@ -41,7 +42,6 @@ public class TableData : MonoBehaviour {
 			movieData.SceneID = movieRow._SceneID;
 			movieData.FileName = movieRow._FileName;
 			movieData.SceneType = movieRow._SceneType;
-
 
 			for (int cnt = 0; cnt < movieRow._NextIDList.Count; ++cnt) {
 				int nextID = movieRow._NextIDList [cnt];
@@ -62,9 +62,10 @@ public class TableData : MonoBehaviour {
 				}
 
 				movieData.nextList.Add (nextData);
+//				Debug.Log (string.Format ("SceneID: {0}, FileName: {1}", movieData.SceneID, movieData.FileName));
 			}
 
-			movieList.Add (movieData);
+			movieMap.Add(movieData.SceneID, movieData);
 		}
 	}
 }
